@@ -1,4 +1,4 @@
-import { AnchorHTMLAttributes, createElement, CSSProperties, HTMLAttributes, ImgHTMLAttributes, ReactNode, useRef } from 'react';
+import { AnchorHTMLAttributes, CSSProperties, ElementType, HTMLAttributes, ImgHTMLAttributes, ReactNode, useRef } from 'react';
 import { useInView, useParallax } from '../hooks';
 
 type UpProps = HTMLAttributes<HTMLElement> &
@@ -12,8 +12,13 @@ type UpProps = HTMLAttributes<HTMLElement> &
 /** Elemento que surge suavemente ao entrar na tela. */
 export function Up({ as = 'div', delay = 0, className = '', style, children, ...rest }: UpProps) {
   const [ref, seen] = useInView<HTMLElement>();
+  const Tag: ElementType = as;
   const css = { ...style, '--d': `${delay}s` } as CSSProperties;
-  return createElement(as, { ref, className: `up${seen ? ' in' : ''} ${className}`.trim(), style: css, ...rest }, children);
+  return (
+    <Tag ref={ref} className={`up${seen ? ' in' : ''} ${className}`.trim()} style={css} {...rest}>
+      {children}
+    </Tag>
+  );
 }
 
 interface PhotoProps { src: string; alt: string; className?: string; delay?: number; }
