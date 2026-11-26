@@ -1,9 +1,13 @@
-import { createElement, CSSProperties, HTMLAttributes, ReactNode, useRef } from 'react';
+import { AnchorHTMLAttributes, createElement, CSSProperties, HTMLAttributes, ImgHTMLAttributes, ReactNode, useRef } from 'react';
 import { useInView, useParallax } from '../hooks';
 
-type UpProps = HTMLAttributes<HTMLElement> & {
-  as?: string; delay?: number; href?: string; children?: ReactNode;
-};
+type UpProps = HTMLAttributes<HTMLElement> &
+  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'rel'> &
+  Pick<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> & {
+    as?: string;
+    delay?: number;
+    children?: ReactNode;
+  };
 
 /** Elemento que surge suavemente ao entrar na tela. */
 export function Up({ as = 'div', delay = 0, className = '', style, children, ...rest }: UpProps) {
