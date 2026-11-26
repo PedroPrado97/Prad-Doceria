@@ -3,20 +3,20 @@ import { formatBRL, PRODUCTS, ProductId } from '../data';
 import { whatsappLink } from '../config';
 import { prefersReducedMotion } from '../hooks';
 
-interface Props { productId: ProductId | null; onClose: () => void; }
+interface Props { productId: ProductId | null; onClose: () => void; onAdd: (id: ProductId, qty: number) => void; }
 
-export default function ProductModal({ productId, onClose }: Props) {
+export default function ProductModal({ productId, onClose, onAdd }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const [id, setId] = useState<ProductId | null>(productId);
   const [qty, setQty] = useState(1);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
-    const d = ref.current;
-    if (!productId || !d) return;
+    const dlg = ref.current;
+    if (!productId || !dlg) return;
     setId(productId);
     setQty(1);
-    if (!d.open) d.showModal();
+    if (!dlg.open) dlg.showModal();
     document.documentElement.style.overflow = 'hidden';
     const raf = requestAnimationFrame(() => setShown(true));
     return () => cancelAnimationFrame(raf);
@@ -34,9 +34,7 @@ export default function ProductModal({ productId, onClose }: Props) {
   const p = id ? PRODUCTS[id] : null;
   const sizes = p?.group ? [PRODUCTS.pp, PRODUCTS.pg] : [];
   const total = p ? p.price * qty : 0;
-  const message = p
-    ? `Olá, Pradô! Quero pedir ${qty}× ${p.name}${p.serving ? ` (${p.serving})` : ''} — total ${formatBRL(total)}.`
-    : '';
+  const message = p ? `Olá, Pradô! Quero pedir ${qty}× ${p.name}${p.serving ? ` (${p.serving})` : ''} — total ${formatBRL(total)}.` : '';
 
   return (
     <dialog
@@ -56,14 +54,13 @@ export default function ProductModal({ productId, onClose }: Props) {
               <div className="seg" role="group" aria-label="Tamanho">
                 {sizes.map((s) => (
                   <button key={s.id} aria-pressed={s.id === p.id} onClick={() => setId(s.id)}>
-                    Tamanho {s.name.slice(-1)}
-                    <small>{s.serving} · {formatBRL(s.price)}</small>
+                    Tamanho {s.name.slice(-1)}<small>{s.serving} · {formatBRL(s.price)}</small>
                   </button>
                 ))}
               </div>
             )}
             <p style={{ margin: 0 }}>{p.description}</p>
-            <ul>{p.details.map((d) => <li key={d}>{d}</li>)}</ul>
+            <ul>{p.details.map((x) => <li key={x}>{x}</li>)}</ul>
             <div className="qty">
               <span>Quantidade</span>
               <button onClick={() => setQty((q) => Math.max(1, q - 1))} aria-label="Menos">−</button>
@@ -71,7 +68,8 @@ export default function ProductModal({ productId, onClose }: Props) {
               <button onClick={() => setQty((q) => Math.min(99, q + 1))} aria-label="Mais">+</button>
             </div>
             <div className="tot"><span>Total</span><b>{formatBRL(total)}</b></div>
-            <a className="btn wa" href={whatsappLink(message)} target="_blank" rel="noopener noreferrer">Pedir pelo WhatsApp</a>
+            <button className="pill red" onClick={() => { onAdd(p.id, qty); close(); }}>Adicionar ao pedido</button>
+            <a className="pill ghost" href={whatsappLink(message)} target="_blank" rel="noopener noreferrer">Pedir só este pelo WhatsApp ↗</a>
           </div>
         </div>
       )}

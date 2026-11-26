@@ -1,7 +1,8 @@
-/** Somente dígitos, com DDI e DDD. Ex.: 5577999999999 */
-export const WHATSAPP: string = '5577900000000';
-/** Usuário do Instagram, sem @. Deixe vazio para ocultar o botão. */
-export const INSTAGRAM: string = '';
+/** Somente dígitos, com DDI e DDD. */
+export const WHATSAPP: string = '5577988619965';
+/** Usuário do Instagram, sem @. */
+export const INSTAGRAM: string = 'pra_doceria';
+export const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM}/`;
 
-export const whatsappLink = (text: string) =>
-  `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+export const whatsappLink = (text = '') =>
+  `https://api.whatsapp.com/send/?phone=${WHATSAPP}&text=${encodeURIComponent(text)}&type=phone_number&app_absent=0`;

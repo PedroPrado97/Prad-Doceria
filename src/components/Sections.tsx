@@ -1,64 +1,59 @@
 import logo from '../assets/logo.png';
-import { formatBRL, PRODUCTS, ProductId } from '../data';
-import { INSTAGRAM, whatsappLink } from '../config';
-import ProductCard from './ProductCard';
+import { formatBRL, PRODUCTS, Product, ProductId } from '../data';
+import { INSTAGRAM_URL, whatsappLink } from '../config';
+import { useTilt } from '../hooks';
+import { InstagramIcon, Sparkle, WhatsAppIcon } from './Icons';
 import { Photo, Sprinkles, Up } from './ui';
 
 interface OpenProps { onOpen: (id: ProductId) => void; }
 const P = PRODUCTS;
+const Price = ({ v }: { v: number }) => <div className="price"><small>R$</small>{formatBRL(v).slice(3)}</div>;
 
-export function Hero() {
+function PudimCard({ p, onOpen, delay }: { p: Product; onOpen: (id: ProductId) => void; delay: number }) {
+  const tilt = useTilt<HTMLDivElement>();
+  const [name, size] = p.name.split(' ');
   return (
-    <section className="hero">
-      <Sprinkles count={22} />
-      <div className="hero-in">
-        <div>
-          <Up as="img" className="logo" src={logo} alt="Pradô doceria" />
-          <Up as="h1" delay={0.15}>Doces feitos à mão, com carinho, para a sua mesa de Natal.</Up>
-          <Up as="p" delay={0.3}>Pudins, bombons e uma guirlanda de brownie para dividir, presentear e enfeitar.</Up>
-          <Up as="a" className="btn cream" delay={0.45} href="#categorias">Conheça nosso cardápio</Up>
-        </div>
-        <div className="stage">
-          <Photo className="a arch" src={P.gu.image} alt="Guirlanda de brownie decorada com cremes, frutas e detalhes dourados" />
-          <Photo className="b" delay={0.4} src={P.bm.image} alt="Bombom de morango" />
+    <Up as="button" className="cardw" delay={delay} onClick={() => onOpen(p.id)} aria-label={`Ver detalhes de ${p.name}`}>
+      <div className="card" ref={tilt}>
+        <Photo src={p.image} alt={p.name} />
+        <div className="ct">
+          <span className="pill sm">Tamanho {size}</span>
+          <h3>{name} <i>{size}</i></h3>
+          <p>{p.description}</p>
+          <div className="mt">{p.serving}</div>
+          <Price v={p.price} />
+          <span className="btn dark">Ver e pedir ↗</span>
         </div>
       </div>
-    </section>
+    </Up>
   );
 }
 
-export function Categories() {
-  const cats = [
-    { href: '#pudins', title: 'Pudins', sub: 'para dividir à mesa', img: P.pp.image },
-    { href: '#bombons', title: 'Bombons', sub: 'para se presentear', img: P.bu.image },
-    { href: '#guirlanda', title: 'Guirlanda', sub: 'para enfeitar a mesa', img: P.gu.image },
-  ];
+function BombomItem({ p, onOpen, shape, delay }: { p: Product; onOpen: (id: ProductId) => void; shape: string; delay: number }) {
   return (
-    <section className="sec" id="categorias">
-      <div className="wrap">
-        <Up as="h2">O que você quer levar para a mesa?</Up>
-        <div className="cats">
-          {cats.map((c, i) => (
-            <Up as="a" key={c.href} className="cat" href={c.href} delay={i * 0.12}>
-              <Photo className="arch" src={c.img} alt={c.title} />
-              <b>{c.title}</b><small>{c.sub}</small>
-            </Up>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Up as="button" className="bi" delay={delay} onClick={() => onOpen(p.id)} aria-label={`Ver detalhes de ${p.name}`}>
+      <Photo className={shape} src={p.image} alt={p.name} />
+      <span className="nm">{p.name}</span>
+      <Price v={p.price} />
+      <span className="pill sm">Para se presentear</span>
+    </Up>
   );
 }
 
 export function Pudins({ onOpen }: OpenProps) {
   return (
-    <section className="sec" id="pudins" style={{ paddingTop: 24 }}>
+    <section className="sec" id="pudins">
+      <i className="blob b1" /><i className="blob b2" />
+      <Sprinkles count={10} />
       <div className="wrap">
-        <Up as="h2">Pudins</Up>
-        <Up as="p" className="sub">para dividir à mesa</Up>
-        <div className="pud">
-          <ProductCard product={P.pp} onOpen={onOpen} shape="circ" />
-          <ProductCard product={P.pg} onOpen={onOpen} shape="circ" className="g" />
+        <div className="hd">
+          <Up className="pill">Da nossa cozinha para a sua mesa</Up>
+          <Up as="h2" className="big">Pudins</Up>
+          <Up as="p" className="sub">Para dividir à mesa, feitos à mão.</Up>
+        </div>
+        <div className="cards">
+          <PudimCard p={P.pp} onOpen={onOpen} delay={0} />
+          <PudimCard p={P.pg} onOpen={onOpen} delay={0.12} />
         </div>
       </div>
     </section>
@@ -67,13 +62,18 @@ export function Pudins({ onOpen }: OpenProps) {
 
 export function Bombons({ onOpen }: OpenProps) {
   return (
-    <section className="sec bom" id="bombons">
+    <section className="sec red scal" id="bombons">
+      <i className="blob b3" />
+      <Sparkle style={{ left: '8%', top: '16%' }} /><Sparkle style={{ right: '10%', top: '10%', animationDelay: '-1s' }} /><Sparkle style={{ right: '5%', top: '34%', animationDelay: '-2s' }} />
       <div className="wrap">
-        <Up as="h2">Bombons</Up>
-        <Up as="p" className="sub">para se presentear</Up>
-        <div className="bg">
-          <ProductCard product={P.bu} onOpen={onOpen} />
-          <ProductCard product={P.bm} onOpen={onOpen} className="m" />
+        <div className="hd">
+          <Up className="pill">Para presentear</Up>
+          <Up as="h2" className="big">Bombons</Up>
+          <Up as="p" className="sub">Pequenos momentos de doçura para compartilhar.</Up>
+        </div>
+        <div className="bomrow">
+          <BombomItem p={P.bu} onOpen={onOpen} shape="circ" delay={0} />
+          <BombomItem p={P.bm} onOpen={onOpen} shape="rt" delay={0.15} />
         </div>
       </div>
     </section>
@@ -82,16 +82,18 @@ export function Bombons({ onOpen }: OpenProps) {
 
 export function Guirlanda({ onOpen }: OpenProps) {
   return (
-    <section className="sec gui" id="guirlanda">
-      <Sprinkles count={16} />
-      <div className="wrap row">
-        <Up className="ring"><Photo className="circ" src={P.gu.image} alt="Guirlanda de brownie" /></Up>
-        <div>
-          <Up as="h2">Guirlanda de Brownie</Up>
-          <Up as="p" className="sub">para enfeitar a mesa</Up>
-          <Up as="p">{P.gu.description}</Up>
-          <Up className="pr">{formatBRL(P.gu.price)}</Up>
-          <Up as="button" className="btn cream" onClick={() => onOpen('gu')}>Ver detalhes e pedir</Up>
+    <section className="sec" id="guirlanda">
+      <i className="blob b4" />
+      <Sparkle style={{ right: '8%', top: '12%' }} /><Sparkle style={{ right: '44%', bottom: '10%', animationDelay: '-1.5s' }} />
+      <div className="wrap gr">
+        <Photo className="gph" src={P.gu.image} alt="Guirlanda de brownie decorada com cremes, frutas e detalhes dourados" />
+        <div className="gt">
+          <Up as="h2" className="big">Guirlanda</Up>
+          <Up as="p" className="sub">Para enfeitar a mesa.</Up>
+          <Up className="pill">Especial de Natal</Up>
+          <Up as="p" delay={0.1}>{P.gu.description}</Up>
+          <Up delay={0.15}><Price v={P.gu.price} /></Up>
+          <Up as="button" className="btn dark" delay={0.2} onClick={() => onOpen('gu')}>Ver e pedir ↗</Up>
         </div>
       </div>
     </section>
@@ -100,22 +102,17 @@ export function Guirlanda({ onOpen }: OpenProps) {
 
 export function HowToOrder() {
   const steps = [
-    ['Escolha', 'Toque no doce, confira tamanho e preço e defina a quantidade.'],
-    ['Envie', 'O botão do WhatsApp abre a conversa com a Pradô com o pedido já escrito.'],
-    ['Combine', 'Acerte os detalhes diretamente com a Pradô, na conversa.'],
+    ['Escolha', 'Toque no doce e defina tamanho e quantidade.'],
+    ['Envie', 'O pedido já vai escrito para o WhatsApp da Pradô.'],
+    ['Combine', 'Acerte os detalhes direto na conversa.'],
   ];
   return (
-    <section className="sec" id="como-pedir">
+    <section className="sec" id="como-pedir" style={{ paddingBottom: 40 }}>
       <div className="wrap">
-        <Up as="h2">Como fazer seu pedido</Up>
+        <div className="hd"><Up as="h2" className="mid">Como fazer seu pedido</Up></div>
         <div className="steps">
-          {steps.map(([t, d], i) => (
-            <Up key={t} delay={i * 0.1}><h3>{t}</h3><p>{d}</p></Up>
-          ))}
+          {steps.map(([t, d], i) => <Up key={t} delay={i * 0.1}><h3>{t}</h3><p>{d}</p></Up>)}
         </div>
-        <Up as="a" className="btn wa" href={whatsappLink('Olá, Pradô! Quero fazer uma encomenda.')} target="_blank" rel="noopener noreferrer">
-          Falar no WhatsApp
-        </Up>
       </div>
     </section>
   );
@@ -123,16 +120,13 @@ export function HowToOrder() {
 
 export function Footer() {
   return (
-    <footer className="end">
+    <footer className="end scal">
       <Sprinkles count={18} />
       <img src={logo} alt="Pradô doceria" />
       <Up as="h2">Feito à mão, com carinho, para quem você ama.</Up>
       <div className="acts">
-        <a className="btn cream" href={whatsappLink('Olá, Pradô!')} target="_blank" rel="noopener noreferrer">Pedir pelo WhatsApp</a>
-        {INSTAGRAM && (
-          <a className="btn" style={{ background: 'var(--pink)', color: 'var(--red)' }}
-             href={`https://instagram.com/${INSTAGRAM.replace('@', '')}`} target="_blank" rel="noopener noreferrer">Instagram</a>
-        )}
+        <a className="btn" href={whatsappLink('Olá, Pradô! Vim pelo cardápio de Natal.')} target="_blank" rel="noopener noreferrer"><WhatsAppIcon />WhatsApp</a>
+        <a className="btn cream" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><InstagramIcon />Instagram</a>
       </div>
     </footer>
   );
