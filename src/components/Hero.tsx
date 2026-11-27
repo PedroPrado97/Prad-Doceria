@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import hero from '../assets/guirlanda-hero.jpg';
 import marca from '../assets/marca-vermelha.png';
-import { whatsappLink } from '../config';
 import { daysToChristmas, useParallax } from '../hooks';
 import { burst, Sprinkles, Up } from './ui';
 
@@ -26,7 +25,7 @@ export default function Hero() {
           </Up>
         )}
         <Up className="acts" delay={0.7}>
-          <a className="btn" href={whatsappLink('Olá, Pradô! Quero fazer meu pedido de Natal.')} target="_blank" rel="noopener noreferrer">Fazer meu pedido</a>
+          <a className="btn" href="#pudins">Fazer meu pedido</a>
           <a className="lnk" href="#pudins">Ver o cardápio</a>
         </Up>
       </div>

@@ -1,6 +1,8 @@
 import { CSSProperties, useState } from 'react';
+import { useCart } from './cart';
 import { ProductId } from './data';
 import { useScrollState } from './hooks';
+import { CartBar, CartDrawer } from './components/CartDrawer';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import ProductModal from './components/ProductModal';
@@ -8,6 +10,8 @@ import { Bombons, Footer, Guirlanda, HowToOrder, Pudins } from './components/Sec
 
 export default function App() {
   const [open, setOpen] = useState<ProductId | null>(null);
+  const [cartOpen, setCartOpen] = useState(false);
+  const cart = useCart();
   const { p, solid } = useScrollState();
   return (
     <>
@@ -21,7 +25,9 @@ export default function App() {
         <HowToOrder />
       </main>
       <Footer />
-      <ProductModal productId={open} onClose={() => setOpen(null)} />
+      <CartBar cart={cart} onOpen={() => setCartOpen(true)} />
+      <ProductModal productId={open} onClose={() => setOpen(null)} onAdd={cart.add} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
     </>
   );
 }

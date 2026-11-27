@@ -22,7 +22,7 @@ function PudimCard({ p, onOpen, delay }: { p: Product; onOpen: (id: ProductId) =
           <p>{p.description}</p>
           <div className="mt">{p.serving}</div>
           <Price v={p.price} />
-          <span className="btn dark">Ver e pedir ↗</span>
+          <span className="btn dark">Escolher ↗</span>
         </div>
       </div>
     </Up>
@@ -93,7 +93,7 @@ export function Guirlanda({ onOpen }: OpenProps) {
           <Up className="pill">Especial de Natal</Up>
           <Up as="p" delay={0.1}>{P.gu.description}</Up>
           <Up delay={0.15}><Price v={P.gu.price} /></Up>
-          <Up as="button" className="btn dark" delay={0.2} onClick={() => onOpen('gu')}>Ver e pedir ↗</Up>
+          <Up as="button" className="btn dark" delay={0.2} onClick={() => onOpen('gu')}>Escolher ↗</Up>
         </div>
       </div>
     </section>
@@ -102,9 +102,9 @@ export function Guirlanda({ onOpen }: OpenProps) {
 
 export function HowToOrder() {
   const steps = [
-    ['Escolha', 'Toque no doce e defina tamanho e quantidade.'],
-    ['Envie', 'O pedido já vai escrito para o WhatsApp da Pradô.'],
-    ['Combine', 'Acerte os detalhes direto na conversa.'],
+    ['Escolha', 'Toque no doce, defina tamanho e quantidade e adicione ao pedido.'],
+    ['Revise', 'Confira os itens e o total em "Meu pedido".'],
+    ['Finalize', 'Envie pelo WhatsApp e combine pagamento e entrega por lá.'],
   ];
   return (
     <section className="sec" id="como-pedir" style={{ paddingBottom: 40 }}>

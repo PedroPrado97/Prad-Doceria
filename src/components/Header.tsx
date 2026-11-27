@@ -18,7 +18,7 @@ export default function Header({ solid }: { solid: boolean }) {
         </a>
         <nav aria-label="Seções">
           {link('pudins', 'Pudins')}{link('bombons', 'Bombons')}{link('guirlanda', 'Guirlanda')}
-          <a className="btn hide-m" href={whatsappLink('Olá, Pradô! Quero fazer meu pedido de Natal.')} target="_blank" rel="noopener noreferrer">Fazer meu pedido</a>
+          <a className="btn hide-m" href="#pudins">Fazer meu pedido</a>
         </nav>
       </header>
       <a className="fab" aria-label="Pedir pelo WhatsApp" href={whatsappLink('Olá, Pradô! Vim pelo cardápio de Natal.')} target="_blank" rel="noopener noreferrer"><WhatsAppIcon /></a>

@@ -92,3 +92,26 @@ export function daysToChristmas(now = new Date()): number | null {
   const d = Math.round((xmas.getTime() - today.getTime()) / 86400000);
   return d >= 0 ? d : null;
 }
+
+/** Diálogo nativo com animação de entrada/saída, ESC e clique fora. */
+export function useAnimatedDialog(open: boolean, onClose: () => void) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const d = ref.current;
+    if (!d || !open) return;
+    if (!d.open) d.showModal();
+    document.documentElement.style.overflow = 'hidden';
+    const raf = requestAnimationFrame(() => setShown(true));
+    return () => cancelAnimationFrame(raf);
+  }, [open]);
+  const close = () => {
+    setShown(false);
+    window.setTimeout(() => {
+      ref.current?.close();
+      document.documentElement.style.overflow = '';
+      onClose();
+    }, prefersReducedMotion() ? 0 : 320);
+  };
+  return { ref, shown, close };
+}

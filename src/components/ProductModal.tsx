@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { formatBRL, PRODUCTS, ProductId } from '../data';
-import { whatsappLink } from '../config';
 import { prefersReducedMotion } from '../hooks';
 
 interface Props { productId: ProductId | null; onClose: () => void; onAdd: (id: ProductId, qty: number) => void; }
@@ -34,7 +33,6 @@ export default function ProductModal({ productId, onClose, onAdd }: Props) {
   const p = id ? PRODUCTS[id] : null;
   const sizes = p?.group ? [PRODUCTS.pp, PRODUCTS.pg] : [];
   const total = p ? p.price * qty : 0;
-  const message = p ? `Olá, Pradô! Quero pedir ${qty}× ${p.name}${p.serving ? ` (${p.serving})` : ''} — total ${formatBRL(total)}.` : '';
 
   return (
     <dialog
@@ -68,8 +66,7 @@ export default function ProductModal({ productId, onClose, onAdd }: Props) {
               <button onClick={() => setQty((q) => Math.min(99, q + 1))} aria-label="Mais">+</button>
             </div>
             <div className="tot"><span>Total</span><b>{formatBRL(total)}</b></div>
-            <button className="pill red" onClick={() => { onAdd(p.id, qty); close(); }}>Adicionar ao pedido</button>
-            <a className="pill ghost" href={whatsappLink(message)} target="_blank" rel="noopener noreferrer">Pedir só este pelo WhatsApp ↗</a>
+            <button className="btn wa" onClick={() => { onAdd(p.id, qty); close(); }}>Adicionar ao pedido · {formatBRL(total)}</button>
           </div>
         </div>
       )}
